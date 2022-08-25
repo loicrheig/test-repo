@@ -45,7 +45,7 @@ public class Tests
     {
         _controller.AddPlayer(p3);
         Assert.Contains(p3, Controller.Players);
-        _controller.RemovePlayer(p3);
+        //_controller.RemovePlayer(p3);
         CollectionAssert.DoesNotContain(Controller.Players, p3);
     }
 
