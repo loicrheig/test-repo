@@ -3,7 +3,7 @@ name: Build and Test ASP.Net Core app - KingSkullClassicOnline
 on:
   pull_request:
     branches:
-      - main
+      - master
   workflow_dispatch:
 
 jobs:
@@ -11,9 +11,22 @@ jobs:
     runs-on: windows-latest
 
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
+      
+      - name: Cache .Net Dependencies
+        id: cache-net
+        uses: actions/cache@v3
+        env:
+          cache-name: cache-.Net-dependencies
+        with:
+          path: cacheFolder
+          key: ${{ runner.os }}-build-Net6Cache
+          restore-keys: |
+            ${{ runner.os }}-build-
+            ${{ runner.os }}-
 
-      - name: Set up .NET Core
+      - if: ${{ steps.cache-net.outputs.cache-hit != 'true' }}
+        name: Set up .NET Core
         uses: actions/setup-dotnet@v1
         with:
           dotnet-version: '6.0.x'
@@ -27,5 +40,3 @@ jobs:
         
       - name: Test
         run: dotnet test --no-restore --verbosity normal
-
- 
